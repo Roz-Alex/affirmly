@@ -27,7 +27,7 @@ def read_users_me(current_user: User = Depends(get_current_user)):
 # ========== АВТОРИЗАЦИЯ ===========
 @router.post("/sign-in")
 def login(data: LoginRequest, db: Session = Depends(get_db)):
-    user = authenticate_user(db, data.email, data.password)
+    user = authenticate_user(db, data.email.lower(), data.password)
     token = create_access_token(data={"sub": user.email})
 
     ret = {
