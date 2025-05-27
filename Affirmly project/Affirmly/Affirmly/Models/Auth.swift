@@ -12,10 +12,28 @@ struct LoginRequest: Codable {
     let password: String
 }
 
-struct AuthResponse: Codable {
+struct UserCreateRequest: Codable {
+    let name: String
+    let email: String
+    let password: String
+}
+
+struct AuthSignInResponse: Codable {
     let accessToken: String
     let tokenType: String
     let user: UserResponse
+}
+
+struct AuthRegisterResponse: Codable {
+    let accessToken: String
+    let tokenType: String
+    let user: UserResponse
+
+    enum CodingKeys: String, CodingKey {
+        case accessToken = "access_token"
+        case tokenType = "token_type"
+        case user
+    }
 }
 
 struct UserResponse: Codable {

@@ -41,7 +41,7 @@ struct SignInView: View {
                     .font(.custom("Raleway", size: 20))
                     .foregroundColor(Color(red: 0.31, green: 0.41, blue: 0.35))
 
-                NavigationLink(destination: SignUpView()) {
+                NavigationLink(destination: SignUpView(isSignedIn: $isSignedIn)) {
                     Text("Sign Up")
                         .font(.custom("Raleway", size: 20))
 //                        .fontWeight(700)

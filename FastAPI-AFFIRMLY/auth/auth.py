@@ -32,7 +32,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/sign-in")
 # =============== РЕГИСТРАЦИЯ ===============
 
 def create_user(db: Session, user: UserCreate) -> dict:
-    existing_user = get_user_by_email(db, email=user.email)
+    existing_user = get_user_by_email(db, email=user.email.lower())
     if existing_user:
         raise ValueError("Пользователь с таким email уже существует")
 

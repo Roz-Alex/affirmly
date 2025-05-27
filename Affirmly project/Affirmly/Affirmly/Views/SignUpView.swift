@@ -11,7 +11,9 @@ struct SignUpView: View {
     @State private var name: String = ""
     @State private var email: String = ""
     @State private var password: String = ""
-    @State private var isSignedIn: Bool = false
+    @Binding var isSignedIn: Bool
+    
+    @State private var errorMessage: String?
 
     var body: some View {
         ZStack {
@@ -32,10 +34,14 @@ struct SignUpView: View {
                     CustomInputField2(title: "Password", text: $password, isSecure: true)
                 }
                 .padding(.horizontal, 32)
+                
+                if let error = errorMessage {
+                                    Text(error)
+                                        .foregroundColor(.red)
+                                        .font(.caption)
+                                }
 
-                Button(action: {
-                    print("Sign up tapped")
-                }) {
+                Button(action: performSignUp) {
                     Text("Sign up")
                         .font(Font.custom("Raleway", size: 20))
                         .foregroundColor(Color(red: 1, green: 1, blue: 0.98))
@@ -66,7 +72,28 @@ struct SignUpView: View {
             }
         }
     }
+
+private func performSignUp() {
+        errorMessage = nil
+
+        NetworkManager.shared.register(email: email, password: password, name: name) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let auth):
+                    print("Зарегистрирован:", auth)
+                    UserDefaults.standard.set(auth.accessToken, forKey: "access_token")
+                    
+                    self.isSignedIn = true
+
+                case .failure(let error):
+                    print("Ошибка регистрации: $error.localizedDescription)")
+                    errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
 }
+
 
 // Общий вид текстового поля (можно переиспользовать)
 struct CustomInputField2: View {
